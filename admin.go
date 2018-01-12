@@ -6,12 +6,19 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
-
-	"github.com/grafana/grafana/pkg/api/dtos"
 )
 
-func (c *Client) CreateUserForm(settings dtos.AdminCreateUserForm) error {
-	data, err := json.Marshal(settings)
+
+func (c *Client) CreateUserForm(email string, login string, name string, password string) error {
+	data, err := json.Marshal(map[string]string{
+		"email": email,
+		"login": login,
+		"name": name,
+		"password":password,
+	})
+	if err != nil {
+		return err
+	}
 	req, err := c.newRequest("POST", "/api/admin/users", bytes.NewBuffer(data))
 	if err != nil {
 		return err
